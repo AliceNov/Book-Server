@@ -26,6 +26,9 @@ export class UserEntity {
     @OneToMany(type => ReviewEntity, reviewEntity => reviewEntity.author)
     review: ReviewEntity[];
 
+    @Column({default: ''})
+    avatar: string;
+
     @BeforeInsert()
     emailToLowerCase() {
         this.email = this.email.toLocaleLowerCase();

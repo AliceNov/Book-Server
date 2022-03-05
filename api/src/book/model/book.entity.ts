@@ -17,8 +17,8 @@ export class BookEntity implements Book {
     @Column({default: ''})
     description: string;
 
-    @Column({type:"date", default: ''})
-    publishedDate: Date;
+    @Column()
+    publishedDate: string;
 
     @Column()
     cover: string;

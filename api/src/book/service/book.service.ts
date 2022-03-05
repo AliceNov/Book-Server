@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { from, map, Observable, switchMap } from 'rxjs';
+import { UserService } from 'src/user/service/user.service';
 import { DeleteResult, Repository } from 'typeorm';
 import { BookEntity } from '../model/book.entity';
 import { Book } from '../model/book.interface';
@@ -11,6 +12,7 @@ export class BookService {
 
     constructor(
         @InjectRepository(BookEntity) private readonly bookRepository: Repository<BookEntity>,
+        private userService: UserService
     ) {}
 
     create(book: Book): Observable<Book> {

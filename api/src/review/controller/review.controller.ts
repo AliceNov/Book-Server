@@ -18,10 +18,11 @@ export class ReviewController {
 
     @UseGuards(JwtAuthGuard)
     @Post()
-    create(@Body() review: Review, @Request() req, @Param() params): Observable<Review> {
-        const user: User = req.user.user;
-        const book: Book = params.book;
-        return this.reviewService.create(user, book, review);
+    create(@Body() body:{review: Review, book: Book, user: User}): Observable<Review> {
+        const user: User = body.user;
+        const rev = body.review;
+        const book = body.book;
+        return this.reviewService.create(user, book, rev);
     }
 
     @Get('')

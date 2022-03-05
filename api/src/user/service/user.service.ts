@@ -76,7 +76,7 @@ export class UserService {
     }
 
     validateUser(email: string, password: string): Observable<User> {
-        return this.findeByMail(email).pipe(
+        return from(this.userRepository.findOne({email}, {select: ['id', 'password', 'name', 'username', 'email', 'role', 'avatar']})).pipe(
             switchMap((user: User) => 
             this.authservice.comparePasswords(password, user.password).pipe(
                 map((match: boolean) => {

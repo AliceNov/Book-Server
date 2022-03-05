@@ -5,7 +5,7 @@ export interface Book {
     title?: string;
     author?: string;
     description?: string;
-    publishedDate?: Date;
+    publishedDate?: string;
     cover?: string;
     review?: Review[];
 }

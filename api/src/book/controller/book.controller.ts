@@ -1,6 +1,7 @@
-import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Request, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Observable } from 'rxjs';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Observable, of } from 'rxjs';
 import { hasRoles } from 'src/auth/decorator/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -8,6 +9,10 @@ import { UserRole } from 'src/user/model/user.interface';
 import { DeleteResult } from 'typeorm';
 import { Book } from '../model/book.interface';
 import { BookService } from '../service/book.service';
+import { diskStorage } from 'multer';
+import path = require('path');
+import { join } from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 //export const BOOK_URL = 'http://localhost:3000/api/books' 
 
@@ -62,10 +67,31 @@ export class BookController {
         return this.bookService.updateOne(Number(id), book);
     }
 
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @hasRoles(UserRole.ADMIN)
+    //@UseGuards(JwtAuthGuard, RolesGuard)
+    //@hasRoles(UserRole.ADMIN)
     @Delete(':id')
     deleteOne(@Param('id') id: number): Observable<DeleteResult> {
         return this.bookService.deleteOne(id)
+    }
+
+    @Post('upload/:id')
+    @UseInterceptors(FileInterceptor('file', {
+        storage: diskStorage({
+            destination: './uploads/coverimages',
+            filename: (req, file, cb) => {
+                const filename: string = path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4();
+                const extension: string = path.parse(file.originalname).ext;
+
+                cb(null, `${filename}${extension}`)
+            }
+        })
+    }))
+    uploadCover(@UploadedFile() file, @Param('id') id: number): Observable<Book> {
+        return this.bookService.updateOne(id, {cover: file.filename})
+    }
+
+    @Get('cover-image/:imagename')
+    findCoverImage(@Param('imagename') imagename, @Res() res): Observable<Object> {
+        return of(res.sendFile(join(process.cwd(), 'uploads/coverimages/' + imagename)))
     }
 }

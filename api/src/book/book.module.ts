@@ -5,11 +5,13 @@ import { BookEntity } from './model/book.entity';
 import { BookController } from './controller/book.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { BookService } from './service/book.service';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([BookEntity]),
         ReviewModule,
+        UserModule,
         AuthModule
     ],
     controllers: [BookController],

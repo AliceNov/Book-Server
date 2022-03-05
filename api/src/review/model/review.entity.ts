@@ -9,6 +9,9 @@ export class ReviewEntity implements Review{
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Column()
+    title: string;
+
     @Column({default: ''})
     body: string;
 
@@ -31,9 +34,6 @@ export class ReviewEntity implements Review{
 
     @Column()
     publishedDate: Date;
-
-    @Column()
-    isPublished: boolean;
 
     @ManyToOne(type => UserEntity, user => user.review)
     author: UserEntity;

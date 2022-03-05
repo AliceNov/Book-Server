@@ -3,11 +3,11 @@ import { User } from "src/user/model/user.interface";
 
 export interface Review {
     id?: number;
+    title?: string;
     body?: string;
     created?: Date;
     updated?: Date;
     publishedDate?: Date;
-    isPublished?: boolean;
     author?: User;
     book?: Book;
 }
